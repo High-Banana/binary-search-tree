@@ -21,39 +21,91 @@ class Node {
 
 class Tree {
   constructor(array) {
-    const sortedArray = [...new Set(array.sort((a, b) => a - b))];
-    this.root = this.buildTree(sortedArray);
-    // prettyPrint(this.root);
+    const balancedTree = [...new Set(array.sort((a, b) => a - b))];
+    this.root = this.buildTree(balancedTree);
   }
 
-  buildTree(sortedArray) {
-    if (sortedArray.length === 0) return null;
-    const midPoint = Math.floor(sortedArray.length / 2);
-    const rootNode = new Node(sortedArray[midPoint]);
-    rootNode.left = this.buildTree(sortedArray.slice(0, midPoint));
-    rootNode.right = this.buildTree(sortedArray.slice(midPoint + 1));
+  buildTree(balancedTree) {
+    if (balancedTree.length === 0) return null;
+    const midPoint = Math.floor(balancedTree.length / 2);
+    const rootNode = new Node(balancedTree[midPoint]);
+    rootNode.left = this.buildTree(balancedTree.slice(0, midPoint));
+    rootNode.right = this.buildTree(balancedTree.slice(midPoint + 1));
     return rootNode;
   }
 
-  insert(value, currentNode = this.root) {
-    if (currentNode === null) return new Node(value);
-    if (value === undefined) {
-      console.log("Value cannot be empty");
-      return;
+  insert(value, currentRoot = this.root) {
+    if (value === undefined) return console.log("Error! Value cannot be empty");
+    if (currentRoot === null) return new Node(value);
+    if (value > currentRoot.data) {
+      currentRoot.right = this.insert(value, currentRoot.right);
+    } else if (value < currentRoot.data) {
+      currentRoot.left = this.insert(value, currentRoot.left);
+    } else return currentRoot;
+
+    // prettyPrint(currentRoot);
+    return currentRoot;
+  }
+
+  delete(value, currentRoot = this.root) {
+    if (currentRoot === null) return currentRoot;
+    if (value === undefined) return console.log("Error! Value cannot be empty");
+
+    if (value > currentRoot.data) {
+      currentRoot.right = this.delete(value, currentRoot.right);
+      prettyPrint(this.root);
+      console.log("1");
+      return currentRoot;
+    } else if (value < currentRoot.data) {
+      prettyPrint(this.root);
+      console.log("2");
+      currentRoot.left = this.delete(value, currentRoot.left);
+      return currentRoot;
+    } else {
+      console.log(currentRoot);
+      console.log(currentRoot.data);
+      if (currentRoot.left === null && currentRoot.right === null) {
+        prettyPrint(this.root);
+        console.log("3");
+        return null;
+      } else if (currentRoot.right === null) {
+        // console.log(currentRoot.left);
+        prettyPrint(this.root);
+        console.log("4");
+        return currentRoot.left;
+      } else if (currentRoot.left === null) {
+        // console.log(currentRoot.right);
+        prettyPrint(this.root);
+        console.log("5");
+        return currentRoot.right;
+      }
     }
 
-    if (value > currentNode.data) {
-      currentNode.right = this.insert(value, currentNode.right);
-    } else if (value < currentNode.data) {
-      currentNode.left = this.insert(value, currentNode.left);
-    } else return;
-
-    prettyPrint(currentNode);
-    return currentNode;
+    let successerParent = currentRoot;
+    let successer = currentRoot.left;
+    while (successer.right !== null) {
+      successerParent = successer;
+      successer = successer.right;
+    }
+    currentRoot.data = successer.data;
+    if (successer.data > successerParent.data) {
+      successerParent.right = this.delete(successerParent.right.data, successerParent.right);
+    } else {
+      successerParent.left = this.delete(successerParent.left.data, successerParent.left);
+    }
+    prettyPrint(this.root);
+    console.log("6");
+    return currentRoot;
   }
 }
 
 // const tree1 = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
 const tree2 = new Tree([7, 6, 5, 3, 4, 2, 1]);
-tree2.insert(10);
+tree2.insert(8);
+tree2.insert(6);
 tree2.insert(9);
+tree2.insert(9);
+tree2.insert(1.5);
+tree2.insert(-1);
+// tree2.delete(9);
+tree2.delete(1);
