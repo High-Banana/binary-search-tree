@@ -53,48 +53,28 @@ class Tree {
 
     if (value > currentRoot.data) {
       currentRoot.right = this.delete(value, currentRoot.right);
-      prettyPrint(this.root);
-      console.log("1");
-      return currentRoot;
     } else if (value < currentRoot.data) {
-      prettyPrint(this.root);
-      console.log("2");
       currentRoot.left = this.delete(value, currentRoot.left);
-      return currentRoot;
     } else {
-      console.log(currentRoot);
-      console.log(currentRoot.data);
-      if (currentRoot.left === null && currentRoot.right === null) {
-        prettyPrint(this.root);
-        console.log("3");
-        return null;
-      } else if (currentRoot.right === null) {
-        // console.log(currentRoot.left);
-        prettyPrint(this.root);
-        console.log("4");
-        return currentRoot.left;
-      } else if (currentRoot.left === null) {
-        // console.log(currentRoot.right);
-        prettyPrint(this.root);
-        console.log("5");
+      if (currentRoot.left === null) {
         return currentRoot.right;
+      } else if (currentRoot.right === null) {
+        return currentRoot.left;
+      }
+      let predecesserParent = currentRoot;
+      let predecesser = currentRoot.left;
+      while (predecesser.right !== null) {
+        predecesserParent = predecesser;
+        predecesser = predecesser.right;
+      }
+      currentRoot.data = predecesser.data;
+      if (predecesser.data > predecesserParent.data) {
+        predecesserParent.right = this.delete(predecesserParent.right.data, predecesserParent.right);
+      } else {
+        predecesserParent.left = this.delete(predecesserParent.left.data, predecesserParent.left);
       }
     }
-
-    let successerParent = currentRoot;
-    let successer = currentRoot.left;
-    while (successer.right !== null) {
-      successerParent = successer;
-      successer = successer.right;
-    }
-    currentRoot.data = successer.data;
-    if (successer.data > successerParent.data) {
-      successerParent.right = this.delete(successerParent.right.data, successerParent.right);
-    } else {
-      successerParent.left = this.delete(successerParent.left.data, successerParent.left);
-    }
     prettyPrint(this.root);
-    console.log("6");
     return currentRoot;
   }
 }
@@ -107,5 +87,5 @@ tree2.insert(9);
 tree2.insert(9);
 tree2.insert(1.5);
 tree2.insert(-1);
-// tree2.delete(9);
-tree2.delete(1);
+// tree2.delete(4);
+tree2.delete(1.5);
