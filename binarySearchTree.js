@@ -61,21 +61,44 @@ class Tree {
       } else if (currentRoot.right === null) {
         return currentRoot.left;
       }
-      let predecesserParent = currentRoot;
       let predecesser = currentRoot.left;
       while (predecesser.right !== null) {
-        predecesserParent = predecesser;
         predecesser = predecesser.right;
       }
       currentRoot.data = predecesser.data;
-      if (predecesser.data > predecesserParent.data) {
-        predecesserParent.right = this.delete(predecesserParent.right.data, predecesserParent.right);
-      } else {
-        predecesserParent.left = this.delete(predecesserParent.left.data, predecesserParent.left);
-      }
+      currentRoot.left = this.delete(predecesser.data, currentRoot.left);
     }
     prettyPrint(this.root);
     return currentRoot;
+  }
+
+  find(value, currentRoot = this.root) {
+    if (value === undefined) return console.log("Error! Value cannot be empty");
+    if (currentRoot === null) return console.log(`${value} does not exists in the tree.`);
+
+    if (value > currentRoot.data) {
+      return this.find(value, currentRoot.right);
+    } else if (value < currentRoot.data) {
+      return this.find(value, currentRoot.left);
+    } else {
+      console.log(currentRoot);
+      return currentRoot;
+    }
+  }
+
+  levelOrder(currentRoot = this.root) {
+    if (currentRoot === null) return;
+    const queue = [];
+    const result = [];
+
+    queue.push(currentRoot);
+    while (queue.length > 0) {
+      const node = queue.shift();
+      if (node.left !== null) queue.push(node.left);
+      if (node.right !== null) queue.push(node.right);
+      result.push(node.data);
+    }
+    console.log(result.join(", "));
   }
 }
 
@@ -88,4 +111,7 @@ tree2.insert(9);
 tree2.insert(1.5);
 tree2.insert(-1);
 // tree2.delete(4);
-tree2.delete(1.5);
+tree2.delete(2);
+tree2.find(3);
+tree2.find(10);
+tree2.levelOrder();
