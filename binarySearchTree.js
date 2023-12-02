@@ -23,6 +23,9 @@ class Tree {
   constructor(array) {
     const balancedTree = [...new Set(array.sort((a, b) => a - b))];
     this.root = this.buildTree(balancedTree);
+    this.inOrderArray = [];
+    this.preOrderArray = [];
+    this.postOrderArray = [];
   }
 
   buildTree(balancedTree) {
@@ -100,6 +103,42 @@ class Tree {
     }
     console.log(result.join(", "));
   }
+
+  inOrder(root = this.root) {
+    if (root === null) return;
+
+    if (root.left !== null) this.inOrder(root.left);
+
+    if (root.data !== undefined) this.inOrderArray.push(root.data);
+
+    if (root.right !== null) this.inOrder(root.right);
+
+    console.log(`Inorder: ${this.inOrderArray}`);
+  }
+
+  preOrder(root = this.root) {
+    if (root === null) return;
+
+    if (root.data !== undefined) this.preOrderArray.push(root.data);
+
+    if (root.left !== null) this.preOrder(root.left);
+
+    if (root.right !== null) this.preOrder(root.right);
+
+    console.log(`PreOrder: ${this.preOrderArray}`);
+  }
+
+  postOrder(root = this.root) {
+    if (root === null) return;
+
+    if (root.left !== null) this.postOrder(root.left);
+
+    if (root.right !== null) this.postOrder(root.right);
+
+    if (root.data !== undefined) this.postOrderArray.push(root.data);
+
+    console.log(`PostOrder: ${this.postOrderArray}`);
+  }
 }
 
 // const tree1 = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
@@ -115,3 +154,6 @@ tree2.delete(2);
 tree2.find(3);
 tree2.find(10);
 tree2.levelOrder();
+// tree2.inOrder();
+// tree2.preOrder();
+// tree2.postOrder();
