@@ -76,15 +76,15 @@ class Tree {
   }
 
   find(value, currentRoot = this.root) {
-    if (value === undefined) return console.log("Error! Value cannot be empty");
-    if (currentRoot === null) return console.log(`${value} does not exists in the tree.`);
+    if (value === undefined) return "Error! Value cannot be empty";
+    if (currentRoot === null) return `${value} does not exists in the tree.`;
 
     if (value > currentRoot.data) {
       return this.find(value, currentRoot.right);
     } else if (value < currentRoot.data) {
       return this.find(value, currentRoot.left);
     } else {
-      console.log(currentRoot);
+      // console.log(currentRoot);
       return currentRoot;
     }
   }
@@ -139,6 +139,26 @@ class Tree {
 
     console.log(`PostOrder: ${this.postOrderArray}`);
   }
+
+  height(root = this.root) {
+    if (root === null) return 0;
+    return Math.max(this.height(root.left), this.height(root.right)) + 1;
+  }
+
+  depth(node, root = this.root, count = 0) {
+    if (root === null) return;
+    if (node === undefined) node = root.data;
+    if (node === root.data) return count;
+
+    const status = this.find(node, root);
+    if (!status || isNaN(status.data)) return `(NaN) ${node} does not exist in the tree`;
+
+    if (node > root.data) {
+      return this.depth(node, root.right, count + 1);
+    } else {
+      return this.depth(node, root.left, count + 1);
+    }
+  }
 }
 
 // const tree1 = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
@@ -151,9 +171,11 @@ tree2.insert(1.5);
 tree2.insert(-1);
 // tree2.delete(4);
 tree2.delete(2);
-tree2.find(3);
+console.log(tree2.find(3));
 tree2.find(10);
 tree2.levelOrder();
 // tree2.inOrder();
 // tree2.preOrder();
 // tree2.postOrder();
+console.log("Height of the tree:", tree2.height());
+console.log("Depth of the tree:", tree2.depth(7));
