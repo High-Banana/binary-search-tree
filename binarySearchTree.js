@@ -46,7 +46,6 @@ class Tree {
       currentRoot.left = this.insert(value, currentRoot.left);
     } else return currentRoot;
 
-    // prettyPrint(currentRoot);
     return currentRoot;
   }
 
@@ -84,7 +83,6 @@ class Tree {
     } else if (value < currentRoot.data) {
       return this.find(value, currentRoot.left);
     } else {
-      // console.log(currentRoot);
       return currentRoot;
     }
   }
@@ -101,7 +99,7 @@ class Tree {
       if (node.right !== null) queue.push(node.right);
       result.push(node.data);
     }
-    console.log(result.join(", "));
+    return result;
   }
 
   inOrder(root = this.root) {
@@ -113,7 +111,6 @@ class Tree {
 
     if (root.right !== null) this.inOrder(root.right);
 
-    // console.log(`Inorder: ${this.inOrderArray}`);
     return this.inOrderArray;
   }
 
@@ -126,7 +123,7 @@ class Tree {
 
     if (root.right !== null) this.preOrder(root.right);
 
-    console.log(`PreOrder: ${this.preOrderArray}`);
+    return this.preOrderArray;
   }
 
   postOrder(root = this.root) {
@@ -138,7 +135,7 @@ class Tree {
 
     if (root.data !== undefined) this.postOrderArray.push(root.data);
 
-    console.log(`PostOrder: ${this.postOrderArray}`);
+    return this.postOrderArray;
   }
 
   height(root = this.root) {
@@ -166,22 +163,23 @@ class Tree {
     let leftHeight = this.height(root.left);
     let rightHeight = this.height(root.right);
 
-    // return Math.abs(leftHeight - rightHeight) <= 1 ? true : false;
     if (Math.abs(leftHeight - rightHeight) <= 1 && this.isBalanced(root.left) === true && this.isBalanced(root.right) === true)
       return true;
 
     return false;
   }
 
-  reBalance(root = this.root) {
-    if (this.isBalanced()) return console.log(root);
+  reBalance() {
+    if (this.isBalanced()) return prettyPrint(this.root);
 
+    console.log("Before balancing");
     prettyPrint(this.root);
     console.log("After balancing");
     if (this.root === null) return;
     const sorted = [...new Set(this.inOrder().sort((a, b) => a - b))];
     this.root = this.buildTree(sorted);
     prettyPrint(this.root);
+    console.log("Is balanced: ", this.isBalanced());
   }
 }
 
@@ -198,15 +196,13 @@ tree2.insert(-1);
 // tree2.delete(7);
 // tree2.delete(6);
 // tree2.delete(1.5);
-console.log(tree2.find(3));
-tree2.find(10);
-tree2.levelOrder();
-console.log(tree2.inOrder());
-// console.log(tree2.preOrder());
-// tree2.postOrder();
-console.log("Height of the tree:", tree2.height());
-console.log("Depth of the tree:", tree2.depth(7));
-console.log("Is balanced:", tree2.isBalanced());
-// console.log(tree2.reBalance());
-tree2.reBalance();
-console.log("Is balanced:", tree2.isBalanced());
+console.log(tree2.find(3)); // Node {data: 3, left: null, right: null}
+console.log(tree2.find(10)); // 10 does not exists in the tree.
+console.log("Level Order:", [tree2.levelOrder().join(", ")]); // [4, 2, 6, 1, 3, 5, 7, -1, 1.5, 8, 9]
+console.log("Inorder:", [tree2.inOrder().join(", ")]); // [-1, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9]
+console.log("Preorder:", [tree2.preOrder().join(", ")]); // [4, 2, 1, -1, 1.5, 3, 6, 5, 7, 8, 9]
+console.log("Postorder:", [tree2.postOrder().join(", ")]); //
+console.log("Height of the tree:", tree2.height()); // 5
+console.log("Depth of the tree:", tree2.depth(7)); // 2
+console.log("Is balanced:", tree2.isBalanced()); // false
+tree2.reBalance(); // Balances the tree and returns true for isBalanced at the end
