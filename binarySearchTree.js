@@ -23,9 +23,6 @@ class Tree {
   constructor(array) {
     const balancedTree = [...new Set(array.sort((a, b) => a - b))];
     this.root = this.buildTree(balancedTree);
-    this.inOrderArray = [];
-    this.preOrderArray = [];
-    this.postOrderArray = [];
   }
 
   buildTree(balancedTree) {
@@ -102,40 +99,41 @@ class Tree {
     return result;
   }
 
-  inOrder(root = this.root) {
+  inOrder(array = [], root = this.root) {
     if (root === null) return;
 
-    if (root.left !== null) this.inOrder(root.left);
+    if (root.left !== null) this.inOrder(array, root.left);
 
-    if (root.data !== undefined) this.inOrderArray.push(root.data);
+    // if (root.data !== undefined) this.inOrderArray.push(root.data);
+    array.push(root.data);
 
-    if (root.right !== null) this.inOrder(root.right);
+    if (root.right !== null) this.inOrder(array, root.right);
 
-    return this.inOrderArray;
+    return array;
   }
 
-  preOrder(root = this.root) {
+  preOrder(array = [], root = this.root) {
     if (root === null) return;
 
-    if (root.data !== undefined) this.preOrderArray.push(root.data);
+    array.push(root.data);
 
-    if (root.left !== null) this.preOrder(root.left);
+    if (root.left !== null) this.preOrder(array, root.left);
 
-    if (root.right !== null) this.preOrder(root.right);
+    if (root.right !== null) this.preOrder(array, root.right);
 
-    return this.preOrderArray;
+    return array;
   }
 
-  postOrder(root = this.root) {
+  postOrder(array = [], root = this.root) {
     if (root === null) return;
 
-    if (root.left !== null) this.postOrder(root.left);
+    if (root.left !== null) this.postOrder(array, root.left);
 
-    if (root.right !== null) this.postOrder(root.right);
+    if (root.right !== null) this.postOrder(array, root.right);
 
-    if (root.data !== undefined) this.postOrderArray.push(root.data);
+    array.push(root.data);
 
-    return this.postOrderArray;
+    return array;
   }
 
   height(root = this.root) {
@@ -196,13 +194,15 @@ tree2.insert(-1);
 // tree2.delete(7);
 // tree2.delete(6);
 // tree2.delete(1.5);
-console.log(tree2.find(3)); // Node {data: 3, left: null, right: null}
-console.log(tree2.find(10)); // 10 does not exists in the tree.
-console.log("Level Order:", [tree2.levelOrder().join(", ")]); // [4, 2, 6, 1, 3, 5, 7, -1, 1.5, 8, 9]
+// console.log(tree2.find(3)); // Node {data: 3, left: null, right: null}
+// console.log(tree2.find(10)); // 10 does not exists in the tree.
+// console.log("Level Order:", [tree2.levelOrder().join(", ")]); // [4, 2, 6, 1, 3, 5, 7, -1, 1.5, 8, 9]
 console.log("Inorder:", [tree2.inOrder().join(", ")]); // [-1, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9]
 console.log("Preorder:", [tree2.preOrder().join(", ")]); // [4, 2, 1, -1, 1.5, 3, 6, 5, 7, 8, 9]
-console.log("Postorder:", [tree2.postOrder().join(", ")]); //
-console.log("Height of the tree:", tree2.height()); // 5
-console.log("Depth of the tree:", tree2.depth(7)); // 2
-console.log("Is balanced:", tree2.isBalanced()); // false
-tree2.reBalance(); // Balances the tree and returns true for isBalanced at the end
+console.log("Postorder:", [tree2.postOrder().join(", ")]); // [-1, 1.5, 1, 3, 2, 5, 9, 8, 7, 6, 4]
+// console.log("Height of the tree:", tree2.height()); // 5
+// console.log("Depth of the tree:", tree2.depth(7)); // 2
+// console.log("Is balanced:", tree2.isBalanced()); // false
+// tree2.reBalance(); // Balances the tree and returns true for isBalanced at the end
+
+module.exports = Tree;
