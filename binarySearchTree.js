@@ -21,12 +21,16 @@ class Node {
 
 class Tree {
   constructor(array) {
-    const balancedTree = [...new Set(array.sort((a, b) => a - b))];
-    this.root = this.buildTree(balancedTree);
+    this.root = this.buildTree(array);
   }
 
-  buildTree(balancedTree) {
-    if (balancedTree.length === 0) return null;
+  sortAndRemoveDuplicates(array) {
+    return [...new Set(array.sort((a, b) => a - b))];
+  }
+
+  buildTree(unSortedArray) {
+    if (unSortedArray.length === 0) return null;
+    const balancedTree = this.sortAndRemoveDuplicates(unSortedArray);
     const midPoint = Math.floor(balancedTree.length / 2);
     const rootNode = new Node(balancedTree[midPoint]);
     rootNode.left = this.buildTree(balancedTree.slice(0, midPoint));
@@ -34,8 +38,21 @@ class Tree {
     return rootNode;
   }
 
+  find(value, currentRoot = this.root) {
+    if (value === undefined) return "Error! Value cannot be empty.";
+    if (currentRoot === null) return null;
+
+    if (value > currentRoot.data) {
+      return this.find(value, currentRoot.right);
+    } else if (value < currentRoot.data) {
+      return this.find(value, currentRoot.left);
+    } else {
+      return currentRoot;
+    }
+  }
+
   insert(value, currentRoot = this.root) {
-    if (value === undefined) return console.log("Error! Value cannot be empty");
+    if (value === undefined) return "Error! Value cannot be empty.";
     if (currentRoot === null) return new Node(value);
     if (value > currentRoot.data) {
       currentRoot.right = this.insert(value, currentRoot.right);
@@ -48,7 +65,7 @@ class Tree {
 
   delete(value, currentRoot = this.root) {
     if (currentRoot === null) return currentRoot;
-    if (value === undefined) return console.log("Error! Value cannot be empty");
+    if (value === undefined) return "Error! Value cannot be empty";
 
     if (value > currentRoot.data) {
       currentRoot.right = this.delete(value, currentRoot.right);
@@ -67,21 +84,7 @@ class Tree {
       currentRoot.data = predecesser.data;
       currentRoot.left = this.delete(predecesser.data, currentRoot.left);
     }
-    prettyPrint(this.root);
     return currentRoot;
-  }
-
-  find(value, currentRoot = this.root) {
-    if (value === undefined) return "Error! Value cannot be empty";
-    if (currentRoot === null) return `${value} does not exists in the tree.`;
-
-    if (value > currentRoot.data) {
-      return this.find(value, currentRoot.right);
-    } else if (value < currentRoot.data) {
-      return this.find(value, currentRoot.left);
-    } else {
-      return currentRoot;
-    }
   }
 
   levelOrder(currentRoot = this.root) {
@@ -180,29 +183,5 @@ class Tree {
     console.log("Is balanced: ", this.isBalanced());
   }
 }
-
-// const tree1 = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
-const tree2 = new Tree([7, 6, 5, 3, 4, 2, 1]);
-tree2.insert(8);
-tree2.insert(6);
-tree2.insert(9);
-tree2.insert(9);
-tree2.insert(1.5);
-tree2.insert(-1);
-// tree2.delete(9);
-// tree2.delete(8);
-// tree2.delete(7);
-// tree2.delete(6);
-// tree2.delete(1.5);
-// console.log(tree2.find(3)); // Node {data: 3, left: null, right: null}
-// console.log(tree2.find(10)); // 10 does not exists in the tree.
-// console.log("Level Order:", [tree2.levelOrder().join(", ")]); // [4, 2, 6, 1, 3, 5, 7, -1, 1.5, 8, 9]
-console.log("Inorder:", [tree2.inOrder().join(", ")]); // [-1, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9]
-console.log("Preorder:", [tree2.preOrder().join(", ")]); // [4, 2, 1, -1, 1.5, 3, 6, 5, 7, 8, 9]
-console.log("Postorder:", [tree2.postOrder().join(", ")]); // [-1, 1.5, 1, 3, 2, 5, 9, 8, 7, 6, 4]
-// console.log("Height of the tree:", tree2.height()); // 5
-// console.log("Depth of the tree:", tree2.depth(7)); // 2
-// console.log("Is balanced:", tree2.isBalanced()); // false
-// tree2.reBalance(); // Balances the tree and returns true for isBalanced at the end
 
 module.exports = Tree;
